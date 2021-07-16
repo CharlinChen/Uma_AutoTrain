@@ -1,24 +1,26 @@
-# 赛马娘自动育成脚本
+# Umamusume Automatically scripts
 
-#### 介绍
-通过adb获取手机屏幕内容，并通过图像识别得出点击策略，然后在手机相应位置模拟点击，以实现自动养马。
+ウマ娘/赛马娘自动育成脚本 中文版传送门：https://gitee.com/CharlinChen/Uma_AutoTrain
+
+#### Introduction
+Get the phone screen content through ADB, and get the click strategy through image recognition.Then tap in the corresponding position of the mobile phone in order to achieve automatic horse raising.
 
 
-#### 使用说明
+#### Instructions
 
-1.  确保已安装python3，并且带有subprocess、io、time、matplotlib、numpy、random等模块。
-2.  进入手机开发者模式，打开USB调试，用数据线连接手机和电脑。
-3.  使用以下命令运行脚本：`python3 start.py`
-4.  输入训练轮次，刚开始为0，以及目标距离。之后手机上将弹出USB调试申请，请允许调试。
-5.  **本脚本适用于分辨率为2340x1080并且刘海高76像素的手机**，如Redmi Note 8 Pro。
-6.  其他手机请自行更改代码中的特征识别坐标及颜色。
-7.  如果你毫无Python基础，手机也不符合要求，基本可以放弃了。
-8.  视频演示： [https://www.bilibili.com/video/BV1qo4y1C7VU/](https://www.bilibili.com/video/BV1qo4y1C7VU/)
+1.  Make sure PYTHON3 is installed with modules such as subprocess,matplotlib,numpy and random.
+2.  Enter the mobile developer mode, open the USB debugging, then connect the phone and computer with the data cable.
+3.  Run the script using the following command:`python3 start.py`
+4.  Enter the training round (the initial value is 0) and the target distance, then the phone will pop up the USB debugging application, please allow debugging.
+5.  **This script works on phones with a 2340x1080 resolution and 76 pixels high bang**, such as the Redmi Note 8 Pro.
+6.  For other mobile phones, please change the feature identification coordinates and color in the code by yourself.
+7.  If you don't know Python syntax and your phone doesn't meet the requirements, you can probably give up.
+8.  Video presentation: [https://www.bilibili.com/video/BV1qo4y1C7VU/](https://www.bilibili.com/video/BV1qo4y1C7VU/)
 
-#### 责任声明
+#### Responsibility
 
-1.  本代码仅供学习交流，请勿用于商业用途（如淘宝代刷）；
-2.  使用脚本违反了部分游戏条约，请自行对账号负责。
+1.  This code is only for learning and communication, do not use for commercial purposes (such as Taobao);
+2.  The use of script violates part of the game treaty, please be responsible for your account.
 
 By: charlin
 
