@@ -5,10 +5,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 import random
 
-SAVE_DATA = True #是否保存日志
+SAVE_DATA = True # Whether to save logs
 
 screenshot = None
-# 预先加载要识别的数字
+# Preload the number icon
 SX0 = plt.imread('icon/0.png')
 SX1 = plt.imread('icon/1.png')
 SX2 = plt.imread('icon/2.png')
@@ -64,35 +64,35 @@ class uma():
 
     def get_target(self):
         if self.distance == 0:
-            # 短距离目标
+            # Short range target
             self.target = [999, 400, 900, 100, 500]
         elif self.distance == 1:
-            # 英里目标
+            # Miles target
             self.target = [950, 500, 800, 200, 400]
         elif self.distance == 2:
-            # 中距离目标
+            # Middle range target
             self.target = [900, 650, 750, 300, 300]
         elif self.distance == 3:
-            # 长距离目标
+            # Long range target
             self.target = [800, 800, 750, 350, 300]
         elif self.distance == 4:
-            # 自定义目标
+            # Custom target
             self.target = [700, 999, 800, 350, 300]
         elif self.distance == 5:
-            # 自定义目标
+            # Custom target
             self.target = [900, 400, 900, 100, 900]
 
     def cal_target_progress(self):
         '''
-        计算目标属性养成进度
+        Calculate the target progress
         :return:
         '''
         sx = [self.Speed, self.Stamina, self.Power, self.Root, self.Intellect]
         for i in range(5):
             if sx[i] < 10:
-                sx[i] = 1000 #OCR无法识别四位数
+                sx[i] = 1000 #OCR can't recognize four digits
             self.progress[i] = (sx[i])/self.target[i]
-        print("当前属性进度：\n",self.progress*100,"%")
+        print("progress:\n",self.progress*100,"%")
 
     def add_Turns(self):
         self.Turns += 1
@@ -111,31 +111,31 @@ class uma():
 
     def get_SX(self):
         '''
-        获取各项属性
+        Get the attributes
         :return:
         '''
-        # 速度
-        SD = cilp_screenshot(105, 1705, 100, 35) #请改为自己手机上对应的区域
+        # Speed
+        SD = cilp_screenshot(105, 1705, 100, 35) # Please change it to the corresponding area on your mobile phone
         self.Speed = SX_number_OCR(SD)
-        # 耐力
+        # Stamina
         SM = cilp_screenshot(275, 1705, 100, 35)
         self.Stamina = SX_number_OCR(SM)
-        # 力量
+        # Power
         LL = cilp_screenshot(445, 1705, 100, 35)
         self.Power = SX_number_OCR(LL)
-        # 根性
+        # Root
         GX = cilp_screenshot(615, 1705, 100, 35)
         self.Root = SX_number_OCR(GX)
-        # 智慧
+        # Intellect
         ZH = cilp_screenshot(785 - 3, 1705, 100, 35)
         self.Intellect = SX_number_OCR(ZH)
 
     def get_TL(self):
         '''
-        获取当前体力
+        get current stamina
         :return:
         '''
-        p = cilp_screenshot(360, 300, 382, 40) #改为自己手机上的目标区域
+        p = cilp_screenshot(360, 300, 382, 40) # Change to the target area on your phone
         c1 = p[:, :, 0] == p[:, :, 1]
         c2 = p[:, :, 0] == p[:, :, 2]
         c3 = p[:, :, 2] == p[:, :, 1]
@@ -144,11 +144,12 @@ class uma():
 
     def get_friend(self):
         '''
-        友人事件是否发生
+        Whether the friend incident happened
         :return:
         '''
-        # c1、c2、c3、c4为4个特征点来识别事件是否反生，对于不同手机，其位置不同，无法共用
-        # 请自行挑选4个特征点，并更改下面的颜色和位置
+        # C1, C2, C3, and C4 are four feature points to identify whether the event is reversed. 
+        # For different mobile phones, their positions are different and cannot be shared
+        # Please choose the 4 feature points and change the color and position
         c1 = get_color(620, 2056)
         t1 = compcolor([255, 63, 121], c1) < 32
         c2 = get_color(668, 2046)
@@ -164,11 +165,12 @@ class uma():
 
     def get_health(self):
         '''
-        是否生病？
+        Whether sick?
         :return:
         '''
-        # c1、c2、c3、c4为4个特征点来识别事件是否反生，对于不同手机，其位置不同，无法共用
-        # 请自行挑选4个特征点，并更改下面的颜色和位置
+        # C1, C2, C3, and C4 are four feature points to identify whether the event is reversed. 
+        # For different mobile phones, their positions are different and cannot be shared
+        # Please choose the 4 feature points and change the color and position
         c1 = get_color(152, 2102)
         t1 = compcolor([154, 152, 159], c1) > 16
         c2 = get_color(365, 2111)
@@ -184,7 +186,7 @@ class uma():
 
     def get_YRK(self):
         '''
-        获取やる気
+        get YaRuKi (やる気)
         :return:
         '''
         YLK = np.zeros(5)
@@ -193,41 +195,41 @@ class uma():
         Y3 = [256, 165, 4]
         Y4 = [256, 125, 57]
         Y5 = [249, 71, 129]
-        C = get_color(900, 340) # 请更改坐标
+        C = get_color(900, 340) # Please change the coordinates
         YLK[0] = compcolor(C, Y1)
         YLK[1] = compcolor(C, Y2)
         YLK[2] = compcolor(C, Y3)
         YLK[3] = compcolor(C, Y4)
         YLK[4] = compcolor(C, Y5)
         self.YaRuKi = np.argmin(YLK)
-        YRK_text = ["绝不调", "不调", "普通", "好调", "绝好调"]
+        YRK_text = ["Very Bad", "Bad", "Normal", "Good", "Very Good"]
         self.YaRuKi_Text = YRK_text[int(self.YaRuKi)]
 
     def show_info(self):
         print("==================")
-        print(" ▲当前体力：",self.TiLi)
-        print(" ▲やる気：", self.YaRuKi_Text)
+        print(" ▲Stamina：",self.TiLi)
+        print(" ▲YaRuKi：", self.YaRuKi_Text)
         print("------------------")
-        print("  ★速度：",self.Speed)
-        print("  ★耐力：", self.Stamina)
-        print("  ★力量：", self.Power)
-        print("  ★根性：", self.Root)
-        print("  ★智慧：", self.Intellect)
+        print("  ★Speed：",self.Speed)
+        print("  ★Stamina：", self.Stamina)
+        print("  ★Power：", self.Power)
+        print("  ★Root：", self.Root)
+        print("  ★Intellect：", self.Intellect)
         print("==================")
         if self.Friend :
-            print("友人事件已出现！")
+            print("The friend events has occurred!")
         if not self.Health:
-            print("生病！")
+            print("fall ill!")
 
     def toRest(self):
-        print("当前体力：",self.TiLi,"\n==>休息！")
+        print("Stamina：",self.TiLi,"\n==>Take a rest!")
         TAP(167,1900)
         PAUSE(0.3)
         TAP(777, 1500)
         PAUSE(1.5)
 
     def toGoOut(self):
-        print("当前やる気：",self.YaRuKi_Text,"\n==>外出！")
+        print("やる気：",self.YaRuKi_Text,"\n==>go out!")
         TAP(539,2116)
         PAUSE(0.3)
         TAP(516,902)
@@ -235,22 +237,22 @@ class uma():
         TAP(777, 1500)
 
     def toTore(self):
-        print("一切正常，==>训练")
+        print("All going well==>train")
         deta = random.randint(-20, 20)
         TAP(534 + deta, 1904 + deta)
         PAUSE(0.5)
         CAP()
         T = tore()
         T.get_all_score()
-        # 获取目标进度
+        # get target progress
         self.cal_target_progress()
         # T.beta = (np.ones(5) - self.progress)*(1-self.Turns/80)*5 + np.ones(5)
         T.beta = 50*np.exp(-5*self.progress) + np.ones(5)
-        if self.Turns <= 11: # 前11轮羁绊多的优先
+        if self.Turns <= 11: 
             T.toreninngu(0)
-        elif self.Turns <= 25: # 12轮-25轮点数多的优先
+        elif self.Turns <= 25: 
             T.toreninngu(1)
-        elif self.Turns > 25 and self.Turns < 65: # 26轮后改变权重
+        elif self.Turns > 25 and self.Turns < 65: 
             # T.beta = [0.8,1.4,0.6,0.6,1.0]
             # T.beta = [1,0.6,1.6,0.3,1.5]
             T.toreninngu(1)
@@ -259,7 +261,7 @@ class uma():
             T.toreninngu(1)
 
     def toHospital(self):
-        print("健康异常！=>去保健室")
+        print("Fall ill=>Go to the health room")
         TAP(259,2018)
         PAUSE(1)
         TAP(774,1496)
@@ -268,7 +270,7 @@ class uma():
     def toLearnSkill(self):
         if not self.autoLearnSkill:
             return
-        print("开始学习前三个技能！")
+        print("Start learning the first three skills!")
         TAP(900,1900)
         PAUSE(1)
         TAP(974,1122)
@@ -308,7 +310,7 @@ class tore():
         # print(score_array)
         return score_array
     def get_all_score(self):
-        # 速度
+        # speed
         CAP()
         c = get_color(106,2169)
         T1 = compcolor(c, [255, 255, 132]) < 16*3
@@ -323,31 +325,31 @@ class tore():
             CAP()
         self.toSpeed=self.get_up_score()
         self.fSpeed = self.get_friends_num()
-        print("？速度：\n属性增加：",sum(self.toSpeed),self.toSpeed,"\n羁绊人数：",self.fSpeed,"人")
-        # 耐力
+        print("Speed\nUP:",sum(self.toSpeed),self.toSpeed,"\nNumber of partners：",self.fSpeed,"!")
+        # Stamina
         self.tap_points("SM")
         CAP()
         self.toStamina=self.get_up_score()
         self.fStamina = self.get_friends_num()
-        print("？耐力：\n属性增加：",sum(self.toStamina),self.toStamina,"\n羁绊人数：",self.fStamina,"人")
-        # 力量
+        print("Stamina:\nUP:",sum(self.toStamina),self.toStamina,"\nNumber of partners：",self.fStamina,"!")
+        # Power
         self.tap_points("LL")
         CAP()
         self.toPower=self.get_up_score()
         self.fPower = self.get_friends_num()
-        print("？力量：\n属性增加：",sum(self.toPower),self.toPower,"\n羁绊人数：",self.fPower,"人")
-        # 根性
+        print("Power:\nUP:",sum(self.toPower),self.toPower,"\nNumber of partners：",self.fPower,"!")
+        # Root
         self.tap_points("GX")
         CAP()
         self.toRoot=self.get_up_score()
         self.fRoot = self.get_friends_num()
-        print("？根性：\n属性增加：",sum(self.toRoot),self.toRoot,"\n羁绊人数：",self.fRoot,"人")
-        # 智慧
+        print("Root:\nUP:",sum(self.toRoot),self.toRoot,"\nNumber of partners：",self.fRoot,"!")
+        # Intellect
         self.tap_points("ZH")
         CAP()
         self.toIntellect=self.get_up_score()
         self.fIntellect = self.get_friends_num()
-        print("？智慧：\n属性增加：",sum(self.toIntellect),self.toIntellect,"\n羁绊人数：",self.fIntellect,"人")
+        print("Intellect:\nUP:",sum(self.toIntellect),self.toIntellect,"\nNumber of partners：",self.fIntellect,"!")
     def get_friends_num(self):
         c0 = [109,108,117]
         c1 = [42,192,255]
@@ -380,17 +382,17 @@ class tore():
         elif style == "ZH":
             TAP(921 + deta, 2025 + deta)
         else:
-            print("参数错误！！")
+            print("parameter error!!")
         PAUSE(0.1)
     def toreninngu(self,w):
         if w==0:
-            # 羁绊人数优先
+            # Number of partners takes precedence
             P_array = [self.fSpeed+np.sum(self.toSpeed)/100,
                        self.fStamina+np.sum(self.toStamina)/100,
                        self.fPower+np.sum(self.toPower)/100,
                        self.fRoot+np.sum(self.toRoot)/100,
                        self.fIntellect+np.sum(self.toIntellect)/100]
-            print("优先选取羁绊人数更多的训练：\n",P_array)
+            print("Number of partners takes precedence:\n",P_array)
             fmax = max(P_array)
             if P_array[0] == fmax:
                 self.tap_points("SD")
@@ -408,15 +410,15 @@ class tore():
                 self.tap_points("ZH")
                 self.tap_points("ZH")
         elif w==1:
-            # 增加总点数优先（加权）
+            # Points takes precedence (weighting)
             P_array = [np.sum(self.toSpeed*self.beta),
                           np.sum(self.toStamina*self.beta),
                           np.sum(self.toPower*self.beta),
                           np.sum(self.toRoot*self.beta),
                           np.sum(self.toIntellect*self.beta)]
-            print("优先选取加权点数更多的训练")
-            print("当前加权系数：\n",self.beta)
-            print("加权结果：\n",P_array)
+            print("Points takes precedence (weighting)")
+            print("Current weighting coefficient:\n",self.beta)
+            print("The weighted results:\n",P_array)
             fmax = max(P_array)
             if P_array[0] == fmax:
                 self.tap_points("SD")
@@ -453,7 +455,7 @@ class state():
         else:
             return False
     def toChoose2(self):
-        print("出现选项分支！")
+        print("Options branch appears!")
         TAP(522,1324)
     def isChoose3(self):
         c1 = get_color(72, 1139)
@@ -469,7 +471,7 @@ class state():
         else:
             return False
     def toChoose3(self):
-        print("出现选项分支！")
+        print("Options branch appears!")
         TAP(519, 1153)
     def isMain(self):
         c1 = get_color(387, 1951)
@@ -498,7 +500,7 @@ class state():
         else:
             return False
     def toGoRace(self):
-        print("目标粉丝不足，参加比赛！")
+        print("Target fans not enough, enter the contest!")
         TAP(767, 1624)
         PAUSE(4)
         TAP(756, 2039)
@@ -508,8 +510,9 @@ class state():
         TAP(775, 1626)
         PAUSE(2)
     def isRace(self):
-        # c1、c2、c3、c4为4个特征点来识别事件是否反生，对于不同手机，其位置不同，无法共用
-        # 请自行挑选4个特征点，并更改下面的颜色和位置
+        # C1, C2, C3, and C4 are four feature points to identify whether the event is reversed. 
+        # For different mobile phones, their positions are different and cannot be shared
+        # Please choose the 4 feature points and change the color and position
         c1 = get_color(234, 2080)
         t1 = compcolor([47, 197, 218], c1) < 32
         c2 = get_color(753, 2102)
@@ -523,7 +526,7 @@ class state():
         else:
             return False
     def toRace(self):
-        print("参加比赛！")
+        print("enter contest!")
         TAP(756, 2039)
         PAUSE(4)
         TAP(763, 2045)
@@ -531,8 +534,9 @@ class state():
         TAP(775, 1626)
         PAUSE(1)
     def isStartRace(self):
-        # c1、c2、c3、c4为4个特征点来识别事件是否反生，对于不同手机，其位置不同，无法共用
-        # 请自行挑选4个特征点，并更改下面的颜色和位置
+        # C1, C2, C3, and C4 are four feature points to identify whether the event is reversed. 
+        # For different mobile phones, their positions are different and cannot be shared
+        # Please choose the 4 feature points and change the color and position
         c1 = get_color(369, 2177)
         t1 = compcolor([121, 64, 22], c1) < 32
         c2 = get_color(961, 2208)
@@ -546,7 +550,7 @@ class state():
         else:
             return False
     def toStartRace(self):
-        print("查看比赛结果！")
+        print("view the results!")
         TAP(373, 2180)
         PAUSE(10)
         TAP(527, 2178)
@@ -564,11 +568,12 @@ class state():
         else:
             return False
     def toInherit(self):
-        print("因子继承！！")
+        print("Inheritance factor!!")
         TAP(535,2001)
     def isRaceSuccess(self):
-        # c1、c2、c3、c4为4个特征点来识别事件是否反生，对于不同手机，其位置不同，无法共用
-        # 请自行挑选4个特征点，并更改下面的颜色和位置
+        # C1, C2, C3, and C4 are four feature points to identify whether the event is reversed. 
+        # For different mobile phones, their positions are different and cannot be shared
+        # Please choose the 4 feature points and change the color and position
         c1 = get_color(340, 518)
         t1 = compcolor([209, 251, 66], c1) < 32
         c2 = get_color(359, 2049)
@@ -582,14 +587,15 @@ class state():
         else:
             return False
     def toRaceSuccess(self):
-        print("目标达成！")
+        print("goal clear!")
         TAP(537, 2090)
         PAUSE(3)
         TAP(537, 2090)
 
     def isRaceFail(self):
-        # c1、c2、c3、c4为4个特征点来识别事件是否反生，对于不同手机，其位置不同，无法共用
-        # 请自行挑选4个特征点，并更改下面的颜色和位置
+        # C1, C2, C3, and C4 are four feature points to identify whether the event is reversed. 
+        # For different mobile phones, their positions are different and cannot be shared
+        # Please choose the 4 feature points and change the color and position
         c1 = get_color(1039, 711)
         t1 = compcolor([142, 212, 8], c1) < 32
         c2 = get_color(283, 1436)
@@ -604,12 +610,13 @@ class state():
             return False
 
     def toRaceFail(self):
-        print("目标未达成，结束养成……")
+        print("he goal is not achieved, ending...")
         # TAP(291,1628)
 
     def isEnd(self):
-        # c1、c2、c3、c4为4个特征点来识别事件是否反生，对于不同手机，其位置不同，无法共用
-        # 请自行挑选4个特征点，并更改下面的颜色和位置
+        # C1, C2, C3, and C4 are four feature points to identify whether the event is reversed. 
+        # For different mobile phones, their positions are different and cannot be shared
+        # Please choose the 4 feature points and change the color and position
         c1 = get_color(165, 2059)
         t1 = compcolor([32, 187, 211], c1) < 32
         c2 = get_color(632, 2056)
@@ -625,7 +632,6 @@ class state():
 
 
 def PAUSE(s):
-    # print("====暂停"+str(s)+"秒====")
     time.sleep(s)
 def ADB(cmd):
     result = subprocess.Popen('adb\\adb.exe '+cmd,shell=True,stdout=subprocess.PIPE)
@@ -637,16 +643,16 @@ def CAP():
     global screenshot
     img = ADB('shell screencap -p')
     picture_stream = BytesIO(img)
-    # 将图片存至内存，减少磁盘读取压力
+    # Save the picture to memory to reduce disk load
     # screenshot = plt.imread(picture_stream)
     try:
        screenshot = plt.imread(picture_stream)
     except:
-       print("无法获取屏幕信息！")
+       print("cannot get screen information!")
     plt.ion()
     plt.clf()
     plt.imshow(screenshot)
-    plt.axis('off')  # 去掉坐标轴
+    plt.axis('off')  
     plt.tight_layout(pad=0, h_pad=0, w_pad=0)
     plt.pause(0.01)
 
@@ -732,18 +738,18 @@ def compcolor(c1,c2):
     return R+G+B
 
 if __name__ == "__main__":
-    print("注意！\n此脚本只适用于分辨率为2340x1080并且刘海高76像素的手机，如Redmi Note 8 Pro。\n其他手机请自行更改特征识别坐标。")
-    print("如果你毫无Python基础，手机也不符合要求，基本可以放弃了。\nBy：charlin55\n")
-    input("请输入任意字符并按回车继续……")
+    print("This script works on phones with a 2340x1080 resolution and 76 pixels high bang, such as the Redmi Note 8 Pro.\nFor other mobile phones, please change the feature identification coordinates and color in the code by yourself.")
+    print("If you don't know Python syntax and your phone doesn't meet the requirements, you can probably give up.\nBy：charlin55\n")
+    input("Please enter any character and press Enter to continue...")
     print(str(ADB('version'), encoding="utf-8"))
     plt.rcParams['toolbar'] = 'None'
     fig = plt.figure(figsize=(2.6,5.63))
-    fig.canvas.set_window_title('ウマ娘自动脚本')
+    fig.canvas.set_window_title('ウマ娘AutoScript')
     U = uma()
     S = state()
-    U.Turns = int(input("请输入轮次："))
-    print("\n===============\n短距离：0\n英里：1\n中距离：2\n长距离：3\n===============")
-    U.distance = int(input("请输入距离："))
+    U.Turns = int(input("Enter the Turns:"))
+    print("\n===============\nShort:0\nMile:1\nMiddle:2\nLong:3\n===============")
+    U.distance = int(input("Please enter distance type:"))
     U.get_target()
     while True:
         PAUSE(0.7)
@@ -778,35 +784,25 @@ if __name__ == "__main__":
 
         elif S.isMain():
             if U.Turns > 60 and U.Skill_num < 1:
-                # 当轮次大于60时开始学习技能
                 U.toLearnSkill()
                 continue
             U.add_Turns()
-            # 获取体力
             U.get_TL()
-            # 获取やる気
             U.get_YRK()
-            # 获取各项属性
             U.get_SX()
-            # 获取友人
             U.get_friend()
-            # 健康状况
             U.get_health()
             U.show_info()
             if U.TiLi > 85:
-                # 体力大于85的话优先训练
                 U.toTore()
                 continue
             if not U.Health:
-                # 生病则去保健室
                 U.toHospital()
                 continue
             if U.Friend and U.YaRuKi < 4 and U.TiLi < 60:
-                # 友人事件出现时，优先外出
                 U.toGoOut()
                 continue
             if U.Friend and U.Turns > 60 and U.TiLi < 50:
-                # 友人事件出现，育成接近尾声时，优先外出
                 U.toGoOut()
                 continue
             if U.TiLi < 50:
@@ -815,7 +811,7 @@ if __name__ == "__main__":
             if U.YaRuKi < 4:
                 U.toGoOut()
                 continue
-            # 一切正常则去训练
+            # If everything is normal, go to training
             U.toTore()
 
         elif S.isInherit():
@@ -823,7 +819,7 @@ if __name__ == "__main__":
             continue
 
         elif S.isEnd():
-            print("养成结束！")
+            print("Success!")
             break
 
         else:
